@@ -133,7 +133,7 @@ const ActivityLog = () => {
         </form>
 
         <button
-          onClick={handleFilterSubmit}
+          type="submit"
           className="mt-4 rounded-2xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-700"
         >
           Tampilkan Log

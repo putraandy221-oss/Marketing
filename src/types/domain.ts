@@ -51,6 +51,7 @@ export type ActivityAction =
   | 'send_feedback'
   | 'respond_feedback'
   | 'export_report'
+  | 'update_notification_settings'
 
 export interface ActivityLogItem {
   id: string

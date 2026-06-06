@@ -65,8 +65,8 @@ export async function getActivityLogStats(): Promise<{
     throw error ?? new Error('Gagal memuat statistik log aktivitas.')
   }
 
-  const uniqueUsers = new Set(data.map((item: ActivityLogItem) => item.user_id)).size
-  const actionsToday = data.filter((item: ActivityLogItem) => item.created_at >= startOfDay).length
+  const uniqueUsers = new Set(data.map((item: { user_id: any; created_at: any }) => item.user_id)).size
+  const actionsToday = data.filter((item: { user_id: any; created_at: any }) => item.created_at >= startOfDay).length
 
   return {
     totalActions: data.length,

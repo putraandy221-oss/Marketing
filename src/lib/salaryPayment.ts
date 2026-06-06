@@ -112,10 +112,10 @@ export async function getSalaryStats(): Promise<{
   }
 
   const today = new Date().toISOString().slice(0, 10)
-  const totalUnpaid = data.filter((item: SalaryItem) => item.payment_status === 'unpaid').length
-  const totalPaid = data.filter((item: SalaryItem) => item.payment_status === 'paid').length
-  const upcomingPayments = data.filter((item: SalaryItem) => item.due_date > today && item.payment_status === 'unpaid').length
-  const overduePayments = data.filter((item: SalaryItem) => item.due_date < today && item.payment_status === 'unpaid').length
+  const totalUnpaid = data.filter((item: { payment_status: any; due_date: any }) => item.payment_status === 'unpaid').length
+  const totalPaid = data.filter((item: { payment_status: any; due_date: any }) => item.payment_status === 'paid').length
+  const upcomingPayments = data.filter((item: { payment_status: any; due_date: any }) => item.due_date > today && item.payment_status === 'unpaid').length
+  const overduePayments = data.filter((item: { payment_status: any; due_date: any }) => item.due_date < today && item.payment_status === 'unpaid').length
 
   return {
     totalUnpaid,
