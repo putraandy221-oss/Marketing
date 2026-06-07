@@ -3,7 +3,7 @@ import type { ActivityLogItem } from '../types/domain'
 
 export async function createActivityLog(activity: Omit<ActivityLogItem, 'id' | 'created_at' | 'updated_at'>): Promise<ActivityLogItem> {
   const { data, error } = await supabase
-    .from('activity_log')
+    .from('activity_logs')
     .insert(activity)
     .select('*')
     .single()
@@ -21,7 +21,7 @@ export async function fetchActivityLog(filters?: {
   startDate?: string
   endDate?: string
 }): Promise<ActivityLogItem[]> {
-  let query = supabase.from('activity_log').select('*')
+  let query = supabase.from('activity_logs').select('*')
 
   if (filters?.userId) {
     query = query.eq('user_id', filters.userId)
@@ -58,7 +58,7 @@ export async function getActivityLogStats(): Promise<{
   const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).toISOString()
 
   const { data, error } = await supabase
-    .from('activity_log')
+    .from('activity_logs')
     .select('user_id, created_at')
 
   if (error || !data) {

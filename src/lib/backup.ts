@@ -13,7 +13,7 @@ const backupTables = [
   'menu',
   'notifications',
   'notification_settings',
-  'activity_log',
+  'activity_logs',
 ]
 
 export interface BackupPackage {
