@@ -18,17 +18,14 @@ export async function getOwnerUserId(): Promise<string | null> {
 }
 
 export async function fetchUsersByRoles(roles: string[]): Promise<string[]> {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('user_id')
-    .in('role', roles)
-    .eq('is_active', true)
-
-  if (error || !data) {
-    return []
+  const results: string[] = []
+  for (const role of roles) {
+    const { data, error } = await supabase.rpc('get_user_ids_by_role', { target_role: role })
+    if (!error && data) {
+      results.push(...data.map((item: any) => item.user_id as string))
+    }
   }
-
-  return data.map((item: any) => item.user_id as string)
+  return results
 }
 
 export async function fetchAllProfiles(): Promise<UserProfile[]> {
