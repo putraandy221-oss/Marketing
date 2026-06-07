@@ -50,6 +50,7 @@ export type ActivityAction =
   | 'mark_salary_unpaid'
   | 'send_feedback'
   | 'respond_feedback'
+  | 'send_staff_message'
   | 'export_report'
   | 'update_notification_settings'
 
