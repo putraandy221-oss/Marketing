@@ -29,14 +29,18 @@ export async function signInWithEmail(email: string, password: string): Promise<
     return { role: null, error: 'Akun Anda tidak aktif atau belum sepenuhnya terkonfigurasi.' }
   }
 
-  await createActivityLog({
-    user_id: user.id,
-    user_role: role,
-    action: 'login',
-    target_type: 'auth',
-    target_id: user.id,
-    description: 'User berhasil login ke aplikasi.',
-  })
+  try {
+    await createActivityLog({
+      user_id: user.id,
+      user_role: role,
+      action: 'login',
+      target_type: 'auth',
+      target_id: user.id,
+      description: 'User berhasil login ke aplikasi.',
+    })
+  } catch (err) {
+    console.error('Gagal mencatat activity log login:', err)
+  }
 
   return { role, error: null }
 }
