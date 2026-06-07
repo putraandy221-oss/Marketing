@@ -80,14 +80,14 @@ export async function signOut(): Promise<void> {
 export async function fetchUserRole(userId: string): Promise<UserRole | null> {
   const { data, error } = await supabase
     .from('profiles')
-    .select('role, is_active')
+    .select('role')
     .eq('user_id', userId)
     .maybeSingle()
 
   if (error) console.error('fetchUserRole error:', error)
   console.log('fetchUserRole result:', data)
 
-  if (!error && data?.role && data.is_active === true) {
+  if (!error && data?.role) {
     return data.role as UserRole
   }
   return null
@@ -96,14 +96,14 @@ export async function fetchUserRole(userId: string): Promise<UserRole | null> {
 export async function fetchUserRoleByEmail(email: string): Promise<UserRole | null> {
   const { data, error } = await supabase
     .from('profiles')
-    .select('role, is_active')
+    .select('role')
     .eq('email', email)
     .maybeSingle()
 
   if (error) console.error('fetchUserRoleByEmail error:', error)
   console.log('fetchUserRoleByEmail result:', data)
 
-  if (!error && data?.role && data.is_active === true) {
+  if (!error && data?.role) {
     return data.role as UserRole
   }
   return null
