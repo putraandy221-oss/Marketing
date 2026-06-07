@@ -91,3 +91,28 @@ export async function recordExpiredAction(stockId: string, stockName: string, ac
 
   return data as StockExpiredHistoryItem
 }
+
+export async function recordStockHistory(
+  stockId: string,
+  stockName: string,
+  action: 'created' | 'updated' | 'deleted',
+  oldQuantity: number | null,
+  newQuantity: number | null,
+  changedBy: string
+): Promise<void> {
+  const payload = {
+    stock_id: stockId,
+    stock_name: stockName,
+    action,
+    old_quantity: oldQuantity,
+    new_quantity: newQuantity,
+    changed_by: changedBy,
+    change_date: new Date().toISOString(),
+  }
+
+  const { error } = await supabase.from('stock_history').insert(payload)
+  if (error) {
+    console.error('Gagal mencatat stock_history:', error)
+    // don't throw to avoid breaking the main flow
+  }
+}

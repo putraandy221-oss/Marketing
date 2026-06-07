@@ -1,6 +1,8 @@
 import { supabase } from './supabaseClient'
 import type { StockExpiredHistoryItem, StockItem } from '../types/domain'
 import { sendNotificationToRole, checkDuplicateNotificationToday, createNotificationIfNotExists } from './notifications'
+import { recordStockHistory } from './stockHistory'
+import { getCurrentUserId } from './auth'
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24
 
@@ -104,6 +106,14 @@ export async function createStockItem(payload: Omit<StockItem, 'id' | 'created_a
     console.error('Failed to check stock notifications after create:', err)
   }
 
+  // record stock history
+  try {
+    const currentUserId = await getCurrentUserId()
+    await recordStockHistory((data as StockItem).id, (data as StockItem).name, 'created', null, (data as StockItem).quantity, currentUserId ?? 'system')
+  } catch (err) {
+    console.error('Failed to record stock history after create:', err)
+  }
+
   return data as StockItem
 }
 
@@ -111,6 +121,10 @@ export async function updateStockItem(
   id: string,
   payload: Partial<Omit<StockItem, 'id' | 'created_at' | 'updated_at'>>
 ): Promise<StockItem> {
+  // fetch previous state
+  const existingRes = await supabase.from('stock').select('*').eq('id', id).maybeSingle()
+  const prev = existingRes.data as StockItem | null
+
   const { data, error } = await supabase
     .from('stock')
     .update(payload)
@@ -122,6 +136,16 @@ export async function updateStockItem(
   }
 
   const updatedStock = Array.isArray(data) ? data[0] : data
+
+  // record stock history (if quantity changed or metadata changed)
+  try {
+    const currentUserId = await getCurrentUserId()
+    const oldQty = prev ? prev.quantity : null
+    const newQty = (updatedStock as StockItem).quantity
+    await recordStockHistory(updatedStock.id, updatedStock.name, 'updated', oldQty, newQty, currentUserId ?? 'system')
+  } catch (err) {
+    console.error('Failed to record stock history after update:', err)
+  }
 
   // Check and notify if stock is low or expiring
   try {
@@ -137,9 +161,20 @@ export async function updateStockItem(
 }
 
 export async function deleteStockItem(id: string): Promise<void> {
+  // fetch existing for history
+  const existingRes = await supabase.from('stock').select('*').eq('id', id).maybeSingle()
+  const prev = existingRes.data as StockItem | null
+
   const { error } = await supabase.from('stock').delete().eq('id', id)
   if (error) {
     throw error
+  }
+
+  try {
+    const currentUserId = await getCurrentUserId()
+    await recordStockHistory(id, prev?.name ?? 'Unknown', 'deleted', prev?.quantity ?? null, null, currentUserId ?? 'system')
+  } catch (err) {
+    console.error('Failed to record stock history after delete:', err)
   }
 }
 

@@ -1,20 +1,15 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { fetchAllFeedback, markFeedbackAsRead, replyFeedback, sendMessageToStaff } from '../lib/feedback'
-import { fetchProfilesByRole } from '../lib/profiles'
+import { fetchAllFeedback, markFeedbackAsRead, replyFeedback } from '../lib/feedback'
 import { getCurrentUserId } from '../lib/auth'
 import { createActivityLog } from '../lib/activity'
-import type { FeedbackItem, UserProfile } from '../types/domain'
+import type { FeedbackItem } from '../types/domain'
 
 const FeedbackManagerOwner = () => {
   const [feedbackList, setFeedbackList] = useState<FeedbackItem[]>([])
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [replyInputs, setReplyInputs] = useState<Record<string, string>>({})
-  const [staffList, setStaffList] = useState<UserProfile[]>([])
-  const [selectedStaffId, setSelectedStaffId] = useState<string>('')
-  const [newStaffMessage, setNewStaffMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [sendingStaffMessage, setSendingStaffMessage] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [ownerId, setOwnerId] = useState<string | null>(null)
 
@@ -33,24 +28,12 @@ const FeedbackManagerOwner = () => {
     }
   }
 
-  const loadStaffList = async () => {
-    try {
-      const staff = await fetchProfilesByRole('staff')
-      setStaffList(staff)
-      if (staff.length > 0) {
-        setSelectedStaffId(staff[0].user_id)
-      }
-    } catch (err) {
-      setError((err as Error).message)
-    }
-  }
-
   useEffect(() => {
     void (async () => {
       const currentOwner = await getCurrentUserId()
       setOwnerId(currentOwner)
       if (currentOwner) {
-        await Promise.all([loadFeedback(), loadStaffList()])
+        await loadFeedback()
       }
     })()
   }, [])
@@ -71,7 +54,8 @@ const FeedbackManagerOwner = () => {
     if (!item.is_read_by_owner) {
       try {
         await markFeedbackAsRead(item.id)
-        await loadFeedback()
+        // update local state so owner sees it's read immediately
+        setFeedbackList((prev) => prev.map((f) => (f.id === item.id ? { ...f, is_read_by_owner: true } : f)))
       } catch (err) {
         setError((err as Error).message)
       }
@@ -100,51 +84,15 @@ const FeedbackManagerOwner = () => {
           target_id: itemId,
           description: 'Menanggapi masukan karyawan.',
         })
-        await loadFeedback()
+        // update local state: set response, mark read by owner, close form
+        setFeedbackList((prev) => prev.map((f) => (f.id === itemId ? { ...f, response: reply, status: 'responded', is_read_by_owner: true } : f)))
+        setExpandedId(null)
       }
       setReplyInputs((prev) => ({ ...prev, [itemId]: '' }))
     } catch (err) {
       setError((err as Error).message)
     } finally {
       setSaving(false)
-    }
-  }
-
-  const handleSendMessageToStaff = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setError(null)
-
-    if (!ownerId) {
-      setError('User owner belum dikenali. Silakan login ulang.')
-      return
-    }
-    if (!selectedStaffId) {
-      setError('Pilih staff tujuan.')
-      return
-    }
-    const trimmedMessage = newStaffMessage.trim()
-    if (!trimmedMessage) {
-      setError('Pesan tidak boleh kosong.')
-      return
-    }
-
-    setSendingStaffMessage(true)
-    try {
-      await sendMessageToStaff(selectedStaffId, ownerId, trimmedMessage)
-      await createActivityLog({
-        user_id: ownerId,
-        user_role: null,
-        action: 'send_staff_message',
-        target_type: 'feedback',
-        target_id: null,
-        description: `Mengirim pesan baru ke staff ${selectedStaffId}.`,
-      })
-      setNewStaffMessage('')
-      await loadFeedback()
-    } catch (err) {
-      setError((err as Error).message)
-    } finally {
-      setSendingStaffMessage(false)
     }
   }
 
@@ -156,45 +104,7 @@ const FeedbackManagerOwner = () => {
           <p className="mt-1 text-sm text-slate-600">Lihat dan balas masukan privat dari karyawan.</p>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
-          <h3 className="text-lg font-semibold text-slate-900">Kirim Pesan ke Staff</h3>
-          <p className="mt-1 text-sm text-slate-500">Pilih staff dan kirim pesan tanpa menunggu chat sebelumnya.</p>
-          <form onSubmit={handleSendMessageToStaff} className="mt-4 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Pilih Staff</label>
-              <select
-                value={selectedStaffId}
-                onChange={(e) => setSelectedStaffId(e.target.value)}
-                className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100"
-              >
-                {staffList.map((staff) => (
-                  <option key={staff.user_id} value={staff.user_id}>
-                    {staff.full_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Pesan</label>
-              <textarea
-                value={newStaffMessage}
-                onChange={(e) => setNewStaffMessage(e.target.value)}
-                rows={4}
-                className="mt-2 w-full rounded-3xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100"
-                placeholder="Tulis pesan yang ingin dikirim ke staff..."
-              />
-            </div>
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                disabled={sendingStaffMessage || staffList.length === 0}
-                className="min-h-[44px] rounded-2xl bg-amber-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-amber-600 disabled:opacity-60"
-              >
-                {sendingStaffMessage ? 'Mengirim...' : 'Kirim Pesan ke Staff'}
-              </button>
-            </div>
-          </form>
-        </div>
+        
 
         <div className="space-y-4">
           {error ? <p className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p> : null}
