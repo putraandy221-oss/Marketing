@@ -131,6 +131,7 @@ export interface FeedbackItem {
   status: 'pending' | 'responded'
   is_read_by_owner: boolean
   is_read_by_staff: boolean
+  sender_name?: string | null
   created_at: string
   updated_at: string
 }
