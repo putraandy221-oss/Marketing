@@ -90,7 +90,7 @@ const NotificationBell = () => {
       </button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-3 w-[320px] sm:w-[400px] max-w-[calc(100vw-2rem)] rounded-3xl border border-slate-200 bg-white p-4 shadow-2xl">
+        <div className="absolute right-0 z-50 mt-3 w-[320px] sm:w-[400px] max-w-[calc(100vw-2rem)] rounded-3xl border border-slate-200 bg-white p-4 shadow-2xl max-h-[60vh] overflow-y-auto">
           <div className="flex flex-col gap-3">
             <div>
               <h3 className="text-lg font-semibold text-slate-900">Notifikasi</h3>
@@ -105,7 +105,7 @@ const NotificationBell = () => {
             </button>
           </div>
 
-          <div className="mt-4 max-h-72 space-y-3 overflow-y-auto pr-1">
+          <div className="mt-4 space-y-3 pr-1">
             {loading ? (
               <p className="text-sm text-slate-500">Memuat notifikasi...</p>
             ) : visibleNotifications.length === 0 ? (
@@ -141,7 +141,7 @@ const NotificationBell = () => {
             <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-3">
               <h4 className="text-sm font-semibold text-slate-900 mb-2">Pengaturan Notifikasi</h4>
               <div className="grid gap-2">
-                {(Object.keys(settings) as NotificationType[]).map((type) => (
+                {(Object.keys(settings) as NotificationType[]).filter((type) => notificationLabels[type] !== undefined).map((type) => (
                   <label key={type} className="flex items-center justify-between rounded-xl bg-white px-3 py-2 text-sm text-slate-700 ring-1 ring-slate-200">
                     <span className="text-xs">{notificationLabels[type]}</span>
                     <input
