@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getCurrentUserId } from '../lib/auth'
 import {
   fetchNotificationSettingsAndEnsure,
@@ -24,6 +24,7 @@ const NotificationBell = () => {
   const [settings, setSettings] = useState<NotificationSettings | null>(null)
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   const load = async (currentUserId: string) => {
     setLoading(true)
@@ -44,6 +45,22 @@ const NotificationBell = () => {
       await load(current)
     })()
   }, [])
+
+  useEffect(() => {
+    const handleMouseDown = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setOpen(false)
+      }
+    }
+
+    if (open) {
+      document.addEventListener('mousedown', handleMouseDown)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown)
+    }
+  }, [open])
 
   const visibleNotifications = notifications.filter((notification) => {
     if (!settings) return true
@@ -75,7 +92,7 @@ const NotificationBell = () => {
   }
 
   return (
-    <div className="relative">
+    <div ref={wrapperRef} className="relative">
       <button
         type="button"
         onClick={handleToggleOpen}
@@ -90,7 +107,7 @@ const NotificationBell = () => {
       </button>
 
       {open && (
-        <div className="fixed right-4 top-16 z-50 w-[320px] sm:w-[400px] max-w-[calc(100vw-2rem)] rounded-3xl border border-slate-200 bg-white p-4 shadow-2xl max-h-[60vh] overflow-y-auto">
+        <div className="absolute right-0 top-full mt-2 z-50 w-[320px] sm:w-[400px] max-w-[calc(100vw-2rem)] rounded-3xl border border-slate-200 bg-white p-4 shadow-2xl max-h-[60vh] overflow-y-auto">
           <div className="flex flex-col gap-3">
             <div>
               <h3 className="text-lg font-semibold text-slate-900">Notifikasi</h3>
