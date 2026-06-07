@@ -107,7 +107,7 @@ const FeedbackFormStaff = () => {
             </div>
             <span className="text-sm text-slate-500">{feedbackList.length} pesan</span>
           </div>
-          <div className="mt-4 space-y-4">
+          <div className="mt-4 flex flex-col gap-6">
             {loading ? (
               <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center text-slate-500">
                 Memuat riwayat...
@@ -118,28 +118,34 @@ const FeedbackFormStaff = () => {
               </div>
             ) : (
               feedbackList.map((item) => (
-                <article key={item.id} className="rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
-                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-500">
+                <article key={item.id} className="flex flex-col gap-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-slate-500">
                     <span>{new Date(item.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                     <span className={`rounded-full px-3 py-1 text-xs font-semibold ${item.is_read_by_owner ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                       {item.is_read_by_owner ? 'Sudah dibaca' : 'Belum dibaca'}
                     </span>
                   </div>
-                  <div className="space-y-4">
+                  <div className="flex flex-col gap-4">
                     <div className="flex justify-end">
-                      <div className="max-w-[82%] rounded-3xl bg-amber-50 px-4 py-3 text-slate-900 shadow-sm">
-                        <p className="text-sm font-semibold text-slate-700">Pesan Anda</p>
+                      <div className="max-w-[80%] rounded-2xl rounded-tr-none bg-orange-500 px-4 py-3 text-white shadow-sm">
+                        <p className="text-sm font-semibold">Pesan Anda</p>
                         <p className="mt-2 text-sm leading-6">{item.message}</p>
                       </div>
                     </div>
-                    <div className="flex justify-start">
-                      <div className="max-w-[82%] rounded-3xl bg-white px-4 py-3 text-slate-900 shadow-sm border border-slate-200">
-                        <p className="text-sm font-semibold text-slate-700">Balasan Pemilik</p>
-                        <p className={`mt-2 text-sm leading-6 ${item.response ? 'text-slate-900' : 'text-slate-500'}`}>
-                          {item.response ?? 'Belum ada balasan.'}
-                        </p>
+                    {item.response ? (
+                      <div className="flex justify-start">
+                        <div className="max-w-[80%] rounded-2xl rounded-tl-none bg-white text-slate-800 border border-slate-200 px-4 py-3 shadow-sm">
+                          <p className="text-sm font-semibold">Balasan Pemilik</p>
+                          <p className="mt-2 text-sm leading-6">{item.response}</p>
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="flex justify-start">
+                        <div className="max-w-[80%] rounded-2xl rounded-tl-none bg-slate-50 px-4 py-3 text-slate-500 border border-slate-200 shadow-sm">
+                          <p className="text-sm italic">Menunggu balasan...</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </article>
               ))
