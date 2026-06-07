@@ -75,14 +75,14 @@ const FeedbackManagerOwner = () => {
   }
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
-      <div className="flex flex-col gap-3">
+    <section className="w-full rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900">Masukan Karyawan</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Masukan Karyawan</h2>
           <p className="mt-1 text-sm text-slate-600">Lihat dan balas masukan privat dari karyawan.</p>
         </div>
-        <div className="grid gap-4 lg:grid-cols-[1.4fr_0.8fr]">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr]">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
             <h3 className="text-lg font-semibold text-slate-900">Daftar Masukan</h3>
             <div className="mt-4 overflow-x-auto">
               <table className="min-w-full divide-y divide-slate-200 text-left text-sm">

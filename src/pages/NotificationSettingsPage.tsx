@@ -100,17 +100,17 @@ const NotificationSettings = () => {
 
   if (loading) {
     return (
-      <section className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
+      <section className="w-full rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
         <p className="text-center text-slate-500">Memuat pengaturan...</p>
       </section>
     )
   }
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
-      <div className="flex flex-col gap-3">
+    <section className="w-full rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900">Pengaturan Notifikasi</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Pengaturan Notifikasi</h2>
           <p className="mt-1 text-sm text-slate-600">Atur jenis notifikasi mana saja yang ingin Anda terima.</p>
         </div>
 
@@ -121,7 +121,7 @@ const NotificationSettings = () => {
       <div className="mt-6 space-y-4">
         {settings ? (
           notificationTypes.map((notif) => (
-            <div key={notif.key} className="flex items-center justify-between rounded-3xl border border-slate-200 bg-slate-50 p-5">
+            <div key={notif.key} className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
               <div className="flex-1">
                 <h3 className="font-semibold text-slate-900">{notif.label}</h3>
                 <p className="mt-1 text-sm text-slate-600">{notif.description}</p>
@@ -130,7 +130,7 @@ const NotificationSettings = () => {
                 <button
                   onClick={() => void handleToggle(notif.key)}
                   disabled={saving}
-                  className={`relative inline-flex h-8 w-14 items-center rounded-full transition ${
+                  className={`relative inline-flex min-h-[44px] w-[54px] items-center rounded-full transition ${
                     settings[notif.key] ? 'bg-sky-600' : 'bg-slate-300'
                   } ${saving ? 'opacity-60' : ''}`}
                 >

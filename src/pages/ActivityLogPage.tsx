@@ -69,15 +69,15 @@ const ActivityLog = () => {
   }
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
-      <div className="flex flex-col gap-3">
+    <section className="w-full rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900">Log Aktivitas</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Log Aktivitas</h2>
           <p className="mt-1 text-sm text-slate-600">Catat semua aksi pengguna di sistem. Tidak dapat dihapus.</p>
         </div>
 
         {stats && (
-          <div className="mt-4 grid gap-4 md:grid-cols-4">
+          <div className="mt-4 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
               <p className="text-sm text-slate-500">Total Aksi</p>
               <p className="mt-3 text-2xl font-semibold text-slate-900">{stats.totalActions}</p>
@@ -97,7 +97,7 @@ const ActivityLog = () => {
           </div>
         )}
 
-        <form className="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr_1fr]" onSubmit={handleFilterSubmit}>
+        <form className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr]" onSubmit={handleFilterSubmit}>
           <div>
             <label className="block text-sm font-medium text-slate-700">Tanggal Mulai</label>
             <input
@@ -134,7 +134,7 @@ const ActivityLog = () => {
 
         <button
           type="submit"
-          className="mt-4 rounded-2xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-700"
+          className="mt-4 min-h-[44px] rounded-2xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-700"
         >
           Tampilkan Log
         </button>

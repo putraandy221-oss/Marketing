@@ -41,8 +41,8 @@ const LoginPage = () => {
   }
 
   return (
-    <section className="rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-orange-100 max-w-lg mx-auto">
-      <h1 className="text-3xl font-semibold text-slate-900">Masuk ke FnB Management</h1>
+    <section className="rounded-3xl bg-white p-4 sm:p-8 shadow-2xl ring-1 ring-orange-100 max-w-lg mx-auto">
+      <h1 className="text-xl sm:text-2xl font-semibold text-slate-900">Masuk ke FnB Management</h1>
       <p className="mt-2 text-orange-700">Masuk dengan email dan password Supabase.</p>
 
       <form className="mt-8 space-y-4" onSubmit={handleSubmit}>

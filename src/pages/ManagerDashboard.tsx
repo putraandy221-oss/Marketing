@@ -135,20 +135,20 @@ const ManagerDashboard = ({ onLogout }: ManagerDashboardProps) => {
   const formatCurrency = (value: number) => `Rp ${value.toLocaleString('id-ID')}`
 
   return (
-    <div className="space-y-6">
-      <section className="card overflow-hidden p-8">
-        <div className="rounded-3xl bg-gradient-to-r from-orange-500 via-amber-400 to-orange-300 p-6 text-white shadow-xl ring-1 ring-orange-200">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div className="w-full space-y-6">
+      <section className="w-full overflow-hidden rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
+        <div className="rounded-3xl bg-gradient-to-r from-orange-500 via-amber-400 to-orange-300 p-4 sm:p-6 text-white shadow-xl ring-1 ring-orange-200">
+          <div className="flex flex-col flex-wrap gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-3xl font-semibold text-white">Dashboard Manager</h1>
+              <h1 className="text-xl sm:text-2xl font-semibold text-white">Dashboard Manager</h1>
               <p className="mt-2 text-orange-100">Alat operasional untuk memantau stok dan laporan.</p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2">
               <NotificationBell />
               <ThemeToggle />
               <button
                 onClick={onLogout}
-                className="rounded-2xl bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700"
+                className="min-h-[44px] rounded-2xl bg-orange-600 px-3 py-2 text-sm font-medium text-white hover:bg-orange-700"
               >
                 Logout
               </button>
@@ -156,39 +156,39 @@ const ManagerDashboard = ({ onLogout }: ManagerDashboardProps) => {
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-4">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+        <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <p className="text-sm text-slate-500">Jumlah Item Stok</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{stockItems.length}</p>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <p className="text-sm text-slate-500">Stok Rendah</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{lowStockCount}</p>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <p className="text-sm text-slate-500">Stok Hampir Expired</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{expiringStockCount}</p>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <p className="text-sm text-slate-500">Transaksi Hari Ini</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{todayTransactions.length}</p>
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 xl:grid-cols-4">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+        <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <p className="text-sm text-slate-500">Pemasukan Hari Ini</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{formatCurrency(totalIncomeToday)}</p>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <p className="text-sm text-slate-500">Pengeluaran Hari Ini</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{formatCurrency(totalExpenseToday)}</p>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <p className="text-sm text-slate-500">Laba Bersih Hari Ini</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{formatCurrency(netProfitToday)}</p>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <p className="text-sm text-slate-500">Gaji Belum Dibayar</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{unpaidSalaryCount}</p>
           </div>
@@ -198,7 +198,7 @@ const ManagerDashboard = ({ onLogout }: ManagerDashboardProps) => {
           <button
             type="button"
             onClick={() => navigate('/notification-settings')}
-            className="rounded-3xl border border-slate-200 bg-slate-50 p-5 text-left text-slate-900 transition hover:border-slate-300"
+            className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5 text-left text-slate-900 transition hover:border-slate-300"
           >
             <p className="text-sm text-slate-500">Shortcut</p>
             <p className="mt-3 text-lg font-semibold">Pengaturan Notifikasi</p>
@@ -208,16 +208,16 @@ const ManagerDashboard = ({ onLogout }: ManagerDashboardProps) => {
         {error ? <p className="mt-4 text-sm text-rose-600">{error}</p> : null}
       </section>
 
-      <section className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
+      <section className="rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold text-slate-900">Grafik Pemasukan & Pengeluaran</h2>
+            <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Grafik Pemasukan & Pengeluaran</h2>
             <p className="mt-1 text-sm text-slate-600">Ringkasan 7 hari terakhir untuk membantu pengambilan keputusan.</p>
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+        <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <div className="flex items-end gap-3 h-48">
               {lastWeekSummary.map((item) => (
                 <div key={item.date} className="flex-1 text-center">
@@ -254,10 +254,10 @@ const ManagerDashboard = ({ onLogout }: ManagerDashboardProps) => {
         </div>
       </section>
 
-      <section className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
-        <div className="grid gap-6 xl:grid-cols-2">
+      <section className="rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-2">
           <div>
-            <h2 className="text-2xl font-semibold text-slate-900">Stok Kritis</h2>
+            <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Stok Kritis</h2>
             <p className="mt-1 text-sm text-slate-600">Daftar barang yang perlu ditangani segera.</p>
             <div className="mt-4 space-y-3">
               {criticalStocks.length === 0 ? (
@@ -290,7 +290,7 @@ const ManagerDashboard = ({ onLogout }: ManagerDashboardProps) => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold text-slate-900">Transaksi Terbaru</h2>
+            <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Transaksi Terbaru</h2>
             <p className="mt-1 text-sm text-slate-600">Lihat input transaksi terbaru untuk verifikasi cepat.</p>
             <div className="mt-4 space-y-3">
               {recentTransactions.length === 0 ? (

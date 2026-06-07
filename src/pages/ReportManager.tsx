@@ -177,10 +177,10 @@ const ReportManager = () => {
   }
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
+    <section className="rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900">Modul Laporan</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Modul Laporan</h2>
           <p className="mt-1 text-sm text-slate-600">Laporan harian, mingguan, dan bulanan dengan ringkasan laba bersih.</p>
         </div>
         <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">
@@ -188,7 +188,7 @@ const ReportManager = () => {
         </div>
       </div>
 
-      <form className="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr_1fr]" onSubmit={handleFilterSubmit}>
+      <form className="mt-6 grid gap-4 grid-cols-1 lg:grid-cols-[1fr_1fr_1fr]" onSubmit={handleFilterSubmit}>
         <div>
           <label className="block text-sm font-medium text-slate-700">Jenis Laporan</label>
           <select
@@ -230,20 +230,20 @@ const ReportManager = () => {
 
       {error ? <p className="mt-4 text-sm text-rose-600">{error}</p> : null}
 
-      <div className="mt-6 grid gap-4 md:grid-cols-4">
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+      <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
           <p className="text-sm text-slate-500">Total Pemasukan</p>
           <p className="mt-3 text-2xl font-semibold text-slate-900">{formatCurrency(summary.totalIncome)}</p>
         </div>
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
           <p className="text-sm text-slate-500">Total Pengeluaran</p>
           <p className="mt-3 text-2xl font-semibold text-slate-900">{formatCurrency(summary.totalExpense)}</p>
         </div>
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
           <p className="text-sm text-slate-500">Total Gaji</p>
           <p className="mt-3 text-2xl font-semibold text-slate-900">{formatCurrency(summary.totalSalary)}</p>
         </div>
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
           <p className="text-sm text-slate-500">Laba Bersih</p>
           <p className="mt-3 text-2xl font-semibold text-slate-900">{formatCurrency(summary.netProfit)}</p>
         </div>
@@ -252,13 +252,13 @@ const ReportManager = () => {
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <button
           onClick={handleExportExcel}
-          className="inline-flex justify-center rounded-2xl bg-green-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-green-700"
+          className="w-full sm:w-auto min-h-[44px] inline-flex justify-center rounded-2xl bg-green-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-green-700"
         >
           Export ke Excel
         </button>
         <button
           onClick={handleExportPdf}
-          className="inline-flex justify-center rounded-2xl bg-slate-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-900"
+          className="w-full sm:w-auto min-h-[44px] inline-flex justify-center rounded-2xl bg-slate-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-900"
         >
           Export ke PDF
         </button>
@@ -303,10 +303,10 @@ const ReportManager = () => {
         </table>
       </div>
 
-      <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+      <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
         <h3 className="text-lg font-semibold text-slate-900">Ringkasan Stok</h3>
         <p className="mt-2 text-sm text-slate-600">Jumlah item stok saat ini dan kapasitas minimum.</p>
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
+        <div className="mt-4 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           <div className="rounded-3xl bg-white p-4 shadow-sm">
             <p className="text-sm text-slate-500">Total Item Stok</p>
             <p className="mt-2 text-2xl font-semibold text-slate-900">{stockItems.length}</p>

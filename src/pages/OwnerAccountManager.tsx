@@ -117,15 +117,15 @@ const OwnerAccountManager = () => {
   }
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200" id="kelola-akun">
-      <div className="flex flex-col gap-3">
+    <section className="w-full rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200" id="kelola-akun">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900">Kelola Akun</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Kelola Akun</h2>
           <p className="mt-1 text-sm text-slate-600">Tambah, nonaktifkan, dan reset password untuk manager atau karyawan.</p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr]">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
             <h3 className="text-lg font-semibold text-slate-900">Buat Akun Baru</h3>
             <form className="mt-5 space-y-4" onSubmit={handleCreateAccount}>
               <div>
@@ -175,14 +175,14 @@ const OwnerAccountManager = () => {
               <button
                 type="submit"
                 disabled={saving}
-                className="inline-flex justify-center rounded-2xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:opacity-60"
+                className="w-full sm:w-auto inline-flex justify-center rounded-2xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:opacity-60"
               >
                 {saving ? 'Menyimpan...' : 'Buat Akun'}
               </button>
             </form>
           </div>
 
-          <div className="rounded-3xl border border-slate-200 bg-white p-5">
+          <div className="rounded-3xl border border-slate-200 bg-white p-4 sm:p-5">
             <h3 className="text-lg font-semibold text-slate-900">Daftar Akun</h3>
             <div className="mt-4 overflow-x-auto">
               <table className="min-w-full divide-y divide-slate-200 text-left text-sm">

@@ -24,8 +24,8 @@ const StockViewer = () => {
   }, [])
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
-      <h2 className="text-2xl font-semibold text-slate-900">Stok Barang</h2>
+    <section className="w-full rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
+      <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Stok Barang</h2>
       <p className="mt-2 text-sm text-slate-600">Lihat stok barang tanpa dapat mengedit atau menghapus.</p>
 
       <div className="mt-5 overflow-x-auto">

@@ -331,10 +331,10 @@ const StockManager = () => {
   })
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
+    <section className="rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900">Manajemen Stok</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Manajemen Stok</h2>
           <p className="mt-1 text-sm text-slate-600">Atur data stok barang, peringatan minimum, dan expired.</p>
         </div>
         <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">
@@ -342,23 +342,23 @@ const StockManager = () => {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-4 xl:grid-cols-[1.6fr_1fr]">
-        <div className="grid gap-4 md:grid-cols-3">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+      <div className="mt-6 grid gap-4 grid-cols-1 xl:grid-cols-[1.6fr_1fr]">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
             <p className="text-sm text-slate-500">H-7 Expired</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{h7Items.length}</p>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
             <p className="text-sm text-slate-500">H-3 Expired</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{h3Items.length}</p>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
             <p className="text-sm text-slate-500">Sudah Expired</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{expiredItems.length}</p>
           </div>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-5">
+        <div className="rounded-3xl border border-slate-200 bg-white p-4 sm:p-5">
           <h3 className="text-lg font-semibold text-slate-900">Barang Kritis</h3>
           <p className="mt-2 text-sm text-slate-600">Daftar item yang perlu perhatian manajer dan pemilik.</p>
           <div className="mt-4 space-y-3">
@@ -385,8 +385,8 @@ const StockManager = () => {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+      <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr]">
+        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
           <h3 className="text-lg font-semibold text-slate-900">Form Stok</h3>
           <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
             <div>
@@ -490,14 +490,14 @@ const StockManager = () => {
               <button
                 type="submit"
                 disabled={saving}
-                className="inline-flex justify-center rounded-2xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:opacity-60"
+                className="w-full sm:w-auto inline-flex justify-center rounded-2xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:opacity-60"
               >
                 {selectedItem ? 'Perbarui Stok' : 'Tambah Stok'}
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="inline-flex justify-center rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-400"
+                className="w-full sm:w-auto inline-flex justify-center rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-400"
               >
                 Reset
               </button>
@@ -505,7 +505,7 @@ const StockManager = () => {
           </form>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-5">
+        <div className="rounded-3xl border border-slate-200 bg-white p-4 sm:p-5">
           <h3 className="text-lg font-semibold text-slate-900">Daftar Stok</h3>
           <div className="mt-4 overflow-x-auto">
             <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
@@ -562,14 +562,14 @@ const StockManager = () => {
                               <button
                                 onClick={() => void handleExpiredAction(item, 'disposed')}
                                 disabled={saving}
-                                className="rounded-2xl bg-rose-100 px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-200 disabled:opacity-60"
+                                className="min-h-[44px] rounded-2xl bg-rose-100 px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-200 disabled:opacity-60"
                               >
                                 Tandai Dibuang
                               </button>
                               <button
                                 onClick={() => void handleExpiredAction(item, 'replaced')}
                                 disabled={saving}
-                                className="rounded-2xl bg-amber-100 px-3 py-2 text-xs font-semibold text-amber-700 transition hover:bg-amber-200 disabled:opacity-60"
+                                className="min-h-[44px] rounded-2xl bg-amber-100 px-3 py-2 text-xs font-semibold text-amber-700 transition hover:bg-amber-200 disabled:opacity-60"
                               >
                                 Tandai Diganti
                               </button>
@@ -578,13 +578,13 @@ const StockManager = () => {
                             <>
                               <button
                                 onClick={() => handleEdit(item)}
-                                className="rounded-2xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
+                                className="min-h-[44px] rounded-2xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
                               >
                                 Edit
                               </button>
                               <button
                                 onClick={() => handleDelete(item)}
-                                className="rounded-2xl bg-rose-100 px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-200"
+                                className="min-h-[44px] rounded-2xl bg-rose-100 px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-200"
                               >
                                 Hapus
                               </button>
@@ -601,7 +601,7 @@ const StockManager = () => {
         </div>
       </div>
 
-      <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-5">
+      <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-4 sm:p-5">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
             <h3 className="text-lg font-semibold text-slate-900">Riwayat Barang Expired</h3>

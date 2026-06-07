@@ -112,10 +112,10 @@ const OwnerMenuManager = () => {
   }
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <section className="w-full rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900">Manajemen Menu</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Manajemen Menu</h2>
           <p className="mt-1 text-sm text-slate-600">Tambah, edit, dan hapus menu FnB yang tersedia.</p>
         </div>
         <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">
@@ -123,8 +123,8 @@ const OwnerMenuManager = () => {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+      <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr]">
+        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
           <h3 className="text-lg font-semibold text-slate-900">Form Menu</h3>
           <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
             <div>

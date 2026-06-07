@@ -83,8 +83,8 @@ const StaffStockReceiptForm = () => {
   }
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
-      <h2 className="text-2xl font-semibold text-slate-900">Input Stok Masuk</h2>
+    <section className="w-full rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
+      <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Input Stok Masuk</h2>
       <p className="mt-2 text-sm text-slate-600">Pilih barang dan tambahkan stok masuk untuk pembukuan.</p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -133,7 +133,7 @@ const StaffStockReceiptForm = () => {
         <button
           type="submit"
           disabled={saving || loading}
-          className="inline-flex justify-center rounded-2xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:opacity-60"
+          className="min-h-[44px] inline-flex justify-center rounded-2xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:opacity-60"
         >
           {saving ? 'Menyimpan...' : 'Update Stok'}
         </button>
