@@ -1,6 +1,7 @@
 import { supabase } from './supabaseClient'
 import type { FeedbackItem } from '../types/domain'
-import { getOwnerUserId } from './profiles'
+import { getOwnerUserId, fetchUsersByRoles, fetchProfileByUserId } from './profiles'
+import { sendNotificationToRole, createNotificationIfNotExists } from './notifications'
 
 export async function sendFeedback(userId: string, message: string): Promise<FeedbackItem> {
   const ownerId = await getOwnerUserId()
@@ -16,6 +17,22 @@ export async function sendFeedback(userId: string, message: string): Promise<Fee
 
   if (error || !data) {
     throw error ?? new Error('Gagal mengirim masukan.')
+  }
+
+  // Send notification to owner(s)
+  const senderProfile = await fetchProfileByUserId(userId)
+  const truncatedMessage = message.length > 100 ? message.substring(0, 100) + '...' : message
+  
+  try {
+    await sendNotificationToRole(['owner'], {
+      sender_id: userId,
+      type: 'feedback_new',
+      reference_id: `feedback_${data.id}`,
+      title: 'Masukan baru dari karyawan',
+      message: truncatedMessage,
+    })
+  } catch (err) {
+    console.error('Failed to send feedback notification:', err)
   }
 
   return data as FeedbackItem
@@ -93,6 +110,22 @@ export async function replyFeedback(id: string, response: string): Promise<Feedb
 
   if (error || !data) {
     throw error ?? new Error('Gagal menanggapi masukan.')
+  }
+
+  // Send notification to staff who sent the feedback
+  const truncatedResponse = response.length > 100 ? response.substring(0, 100) + '...' : response
+  
+  try {
+    await createNotificationIfNotExists({
+      receiver_id: data.sender_id,
+      sender_id: data.owner_id,
+      type: 'feedback_response',
+      reference_id: `feedback_${data.id}`,
+      title: 'Pemilik membalas masukan Anda',
+      message: truncatedResponse,
+    })
+  } catch (err) {
+    console.error('Failed to send feedback response notification:', err)
   }
 
   return data as FeedbackItem

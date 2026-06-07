@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fetchStockItems, getStockExpirationState } from '../lib/stock'
+import { fetchStockItems, getStockExpirationState, checkAllStocksExpiring } from '../lib/stock'
 import type { StockItem } from '../types/domain'
 
 const StockViewer = () => {
@@ -14,6 +14,8 @@ const StockViewer = () => {
       try {
         const data = await fetchStockItems()
         setItems(data)
+        // Check for expiring stocks
+        await checkAllStocksExpiring()
       } catch (err) {
         setError((err as Error).message)
       } finally {

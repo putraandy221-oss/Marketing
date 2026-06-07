@@ -1,5 +1,6 @@
 import { supabase } from './supabaseClient'
 import type { SalaryItem } from '../types/domain'
+import { createNotificationIfNotExists, checkDuplicateNotificationToday } from './notifications'
 
 export async function fetchSalaries(): Promise<SalaryItem[]> {
   const { data, error } = await supabase
@@ -82,3 +83,55 @@ export async function markSalaryUnpaid(id: string): Promise<SalaryItem> {
 
   return data as SalaryItem
 }
+
+/**
+ * Check all salaries and send reminders for unpaid salaries that are due
+ */
+export async function checkAndNotifySalaryReminders(): Promise<void> {
+  try {
+    const salaries = await fetchSalaries()
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    // Get all owners
+    const owners = await supabase
+      .from('profiles')
+      .select('user_id')
+      .eq('role', 'owner')
+      .eq('is_active', true)
+
+    if (!owners.data || owners.data.length === 0) {
+      return
+    }
+
+    for (const salary of salaries) {
+      // Check if salary is unpaid and due date is today or in the past
+      if (salary.payment_status === 'unpaid') {
+        const dueDate = new Date(`${salary.due_date}T00:00:00`)
+        
+        if (dueDate <= today) {
+          for (const owner of owners.data) {
+            const isDuplicate = await checkDuplicateNotificationToday(
+              owner.user_id,
+              'salary_reminder',
+              `salary_${salary.id}`
+            )
+
+            if (!isDuplicate) {
+              await createNotificationIfNotExists({
+                receiver_id: owner.user_id,
+                type: 'salary_reminder',
+                reference_id: `salary_${salary.id}`,
+                title: 'Pengingat: Gaji belum dibayar',
+                message: `Gaji untuk ${salary.employee_name} jatuh tempo pada ${salary.due_date}. Segera tinjau dan bayar.`,
+              })
+            }
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Failed to check salary reminders:', err)
+  }
+}
+

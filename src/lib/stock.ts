@@ -1,5 +1,6 @@
 import { supabase } from './supabaseClient'
 import type { StockExpiredHistoryItem, StockItem } from '../types/domain'
+import { sendNotificationToRole, checkDuplicateNotificationToday, createNotificationIfNotExists } from './notifications'
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24
 
@@ -96,6 +97,13 @@ export async function createStockItem(payload: Omit<StockItem, 'id' | 'created_a
     throw error ?? new Error('Gagal membuat item stok.')
   }
 
+  // Check and notify if stock is low
+  try {
+    await checkAndNotifyStockLow(data as StockItem)
+  } catch (err) {
+    console.error('Failed to check stock notifications after create:', err)
+  }
+
   return data as StockItem
 }
 
@@ -114,6 +122,16 @@ export async function updateStockItem(
     throw error ?? new Error('Gagal memperbarui item stok.')
   }
 
+  // Check and notify if stock is low or expiring
+  try {
+    await Promise.all([
+      checkAndNotifyStockLow(data as StockItem),
+      checkAndNotifyStockExpiring(data as StockItem),
+    ])
+  } catch (err) {
+    console.error('Failed to check stock notifications after update:', err)
+  }
+
   return data as StockItem
 }
 
@@ -123,3 +141,136 @@ export async function deleteStockItem(id: string): Promise<void> {
     throw error
   }
 }
+
+/**
+ * Check if stock is low and send notification to owners and managers
+ */
+async function checkAndNotifyStockLow(item: StockItem): Promise<void> {
+  if (item.quantity <= item.minimum_stock) {
+    const truncatedMessage = `Stok ${item.name} tinggal ${item.quantity} ${item.unit}, di bawah batas minimum ${item.minimum_stock}`
+    
+    try {
+      const receivers = await supabase
+        .from('profiles')
+        .select('user_id')
+        .in('role', ['owner', 'manager'])
+        .eq('is_active', true)
+      
+      if (receivers.data && receivers.data.length > 0) {
+        for (const receiver of receivers.data) {
+          const isDuplicate = await checkDuplicateNotificationToday(
+            receiver.user_id,
+            'stock_low',
+            `stock_low:${item.id}`
+          )
+          
+          if (!isDuplicate) {
+            await createNotificationIfNotExists({
+              receiver_id: receiver.user_id,
+              type: 'stock_low',
+              reference_id: `stock_low:${item.id}`,
+              title: 'Stok hampir habis',
+              message: truncatedMessage,
+            })
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Failed to send stock low notification:', err)
+    }
+  }
+}
+
+/**
+ * Check if stock is expiring soon and send notifications
+ */
+async function checkAndNotifyStockExpiring(item: StockItem): Promise<void> {
+  if (!item.expired_at) {
+    return
+  }
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const expiredAt = new Date(`${item.expired_at}T00:00:00`)
+  const daysUntilExpiry = Math.floor((expiredAt.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+
+  const receivers = await supabase
+    .from('profiles')
+    .select('user_id')
+    .in('role', ['owner', 'manager'])
+    .eq('is_active', true)
+
+  if (!receivers.data || receivers.data.length === 0) {
+    return
+  }
+
+  // Check for H-7 notification
+  if (daysUntilExpiry === 7) {
+    const message = `${item.name} akan expired pada ${item.expired_at}`
+    
+    try {
+      for (const receiver of receivers.data) {
+        const isDuplicate = await checkDuplicateNotificationToday(
+          receiver.user_id,
+          'stock_expiring_h7',
+          `stock_expiring_h7:${item.id}`
+        )
+        
+        if (!isDuplicate) {
+          await createNotificationIfNotExists({
+            receiver_id: receiver.user_id,
+            type: 'stock_expiring_h7',
+            reference_id: `stock_expiring_h7:${item.id}`,
+            title: 'Stok hampir expired (7 hari)',
+            message,
+          })
+        }
+      }
+    } catch (err) {
+      console.error('Failed to send H-7 expiry notification:', err)
+    }
+  }
+
+  // Check for H-3 notification
+  if (daysUntilExpiry === 3) {
+    const message = `${item.name} akan expired pada ${item.expired_at}`
+    
+    try {
+      for (const receiver of receivers.data) {
+        const isDuplicate = await checkDuplicateNotificationToday(
+          receiver.user_id,
+          'stock_expiring_h3',
+          `stock_expiring_h3:${item.id}`
+        )
+        
+        if (!isDuplicate) {
+          await createNotificationIfNotExists({
+            receiver_id: receiver.user_id,
+            type: 'stock_expiring_h3',
+            reference_id: `stock_expiring_h3:${item.id}`,
+            title: 'Stok kritis expired (3 hari)',
+            message,
+          })
+        }
+      }
+    } catch (err) {
+      console.error('Failed to send H-3 expiry notification:', err)
+    }
+  }
+}
+
+/**
+ * Check all stocks for expiration warnings (called when stock page loads)
+ */
+export async function checkAllStocksExpiring(): Promise<void> {
+  try {
+    const stocks = await fetchStockItems()
+    
+    for (const stock of stocks) {
+      await checkAndNotifyStockExpiring(stock)
+    }
+  } catch (err) {
+    console.error('Failed to check all stocks for expiration:', err)
+  }
+}
+

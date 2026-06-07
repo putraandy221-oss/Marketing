@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fetchSalaries } from '../lib/salaries'
+import { fetchSalaries, checkAndNotifySalaryReminders } from '../lib/salaries'
 import type { SalaryItem } from '../types/domain'
 
 const ManagerSalaryOverview = () => {
@@ -14,6 +14,8 @@ const ManagerSalaryOverview = () => {
       try {
         const data = await fetchSalaries()
         setItems(data)
+        // Check and notify for unpaid salaries
+        await checkAndNotifySalaryReminders()
       } catch (err) {
         setError((err as Error).message)
       } finally {

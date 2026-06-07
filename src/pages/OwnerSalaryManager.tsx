@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { createSalary, deleteSalary, fetchSalaries, markSalaryPaid, markSalaryUnpaid, updateSalary } from '../lib/salaries'
+import { createSalary, deleteSalary, fetchSalaries, markSalaryPaid, markSalaryUnpaid, updateSalary, checkAndNotifySalaryReminders } from '../lib/salaries'
 import { createNotificationIfNotExists } from '../lib/notifications'
 import { getCurrentUserId } from '../lib/auth'
 import { fetchUsersByRoles } from '../lib/profiles'
@@ -36,6 +36,8 @@ const OwnerSalaryManager = () => {
     try {
       const data = await fetchSalaries()
       setItems(data)
+      // Check and notify for unpaid salaries
+      await checkAndNotifySalaryReminders()
     } catch (err) {
       setError((err as Error).message)
     } finally {
