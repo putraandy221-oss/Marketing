@@ -111,20 +111,24 @@ export async function checkAndNotifySalaryReminders(): Promise<void> {
         
         if (dueDate <= today) {
           for (const owner of owners.data) {
-            const isDuplicate = await checkDuplicateNotificationToday(
-              owner.user_id,
-              'salary_reminder',
-              `salary_${salary.id}`
-            )
+            try {
+              const isDuplicate = await checkDuplicateNotificationToday(
+                owner.user_id,
+                'salary_reminder',
+                `salary_${salary.id}`
+              )
 
-            if (!isDuplicate) {
-              await createNotificationIfNotExists({
-                receiver_id: owner.user_id,
-                type: 'salary_reminder',
-                reference_id: `salary_${salary.id}`,
-                title: 'Pengingat: Gaji belum dibayar',
-                message: `Gaji untuk ${salary.employee_name} jatuh tempo pada ${salary.due_date}. Segera tinjau dan bayar.`,
-              })
+              if (!isDuplicate) {
+                await createNotificationIfNotExists({
+                  receiver_id: owner.user_id,
+                  type: 'salary_reminder',
+                  reference_id: `salary_${salary.id}`,
+                  title: 'Pengingat: Gaji belum dibayar',
+                  message: `Gaji untuk ${salary.employee_name} jatuh tempo pada ${salary.due_date}. Segera tinjau dan bayar.`,
+                })
+              }
+            } catch (err) {
+              console.error('Failed to send salary reminder notification:', err)
             }
           }
         }

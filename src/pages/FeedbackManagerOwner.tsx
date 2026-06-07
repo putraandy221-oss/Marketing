@@ -152,26 +152,28 @@ const FeedbackManagerOwner = () => {
                       </div>
                     </div>
 
-                    <form onSubmit={(event) => void handleReply(event, item.id)} className="space-y-3">
-                      <label className="block text-sm font-medium text-slate-700">Balas pesan</label>
-                      <textarea
-                        value={replyInputs[item.id] ?? ''}
-                        onChange={(e) => setReplyInputs((prev) => ({ ...prev, [item.id]: e.target.value }))}
-                        rows={4}
-                        className="w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100"
-                        placeholder="Tulis balasan untuk staff..."
-                      />
-                      {error ? <p className="text-sm text-rose-600">{error}</p> : null}
-                      <div className="flex justify-end">
-                        <button
-                          type="submit"
-                          disabled={saving}
-                          className="min-h-[44px] rounded-2xl bg-amber-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-amber-600 disabled:opacity-60"
-                        >
-                          {saving ? 'Menyimpan...' : 'Kirim Respon'}
-                        </button>
-                      </div>
-                    </form>
+                    {!item.response ? (
+                      <form onSubmit={(event) => void handleReply(event, item.id)} className="space-y-3">
+                        <label className="block text-sm font-medium text-slate-700">Balas pesan</label>
+                        <textarea
+                          value={replyInputs[item.id] ?? ''}
+                          onChange={(e) => setReplyInputs((prev) => ({ ...prev, [item.id]: e.target.value }))}
+                          rows={4}
+                          className="w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100"
+                          placeholder="Tulis balasan untuk staff..."
+                        />
+                        {error ? <p className="text-sm text-rose-600">{error}</p> : null}
+                        <div className="flex justify-end">
+                          <button
+                            type="submit"
+                            disabled={saving}
+                            className="min-h-[44px] rounded-2xl bg-amber-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-amber-600 disabled:opacity-60"
+                          >
+                            {saving ? 'Menyimpan...' : 'Kirim Respon'}
+                          </button>
+                        </div>
+                      </form>
+                    ) : null}
                   </div>
                 ) : null}
               </article>

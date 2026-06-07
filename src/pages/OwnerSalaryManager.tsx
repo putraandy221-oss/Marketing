@@ -80,17 +80,21 @@ const OwnerSalaryManager = () => {
       : `Gaji untuk ${item.employee_name} jatuh tempo pada ${item.due_date}. Segera tinjau dan bayar.`
 
     await Promise.all(
-      receivers.map((receiverId) =>
-        createNotificationIfNotExists({
-          receiver_id: receiverId,
-          sender_id: senderId,
-          type: 'salary_reminder',
-          reference_id: `salary_${action}:${item.id}`,
-          title,
-          message,
-          is_read: false,
-        })
-      )
+      receivers.map(async (receiverId) => {
+        try {
+          await createNotificationIfNotExists({
+            receiver_id: receiverId,
+            sender_id: senderId,
+            type: 'salary_reminder',
+            reference_id: `salary_${action}:${item.id}`,
+            title,
+            message,
+            is_read: false,
+          })
+        } catch (err) {
+          console.error('Failed to send salary reminder notification:', err)
+        }
+      })
     )
   }
 
