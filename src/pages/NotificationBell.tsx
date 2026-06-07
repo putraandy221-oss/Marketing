@@ -74,13 +74,13 @@ const NotificationBell = () => {
   const handleMarkRead = async (id: string) => {
     if (!userId) return
     await markNotificationAsRead(id)
-    await load(userId)
+    setNotifications((prev) => prev.map((notification) => (notification.id === id ? { ...notification, is_read: true } : notification)))
   }
 
   const handleMarkAllRead = async () => {
     if (!userId) return
     await markAllNotificationsRead(userId)
-    await load(userId)
+    setNotifications((prev) => prev.map((notification) => ({ ...notification, is_read: true })))
   }
 
   const handleToggleSetting = async (type: NotificationType) => {

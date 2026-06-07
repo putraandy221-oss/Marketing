@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient'
+import { getCurrentUserId } from './auth'
 import type { TransactionItem } from '../types/domain'
 
 export async function fetchTransactions(): Promise<TransactionItem[]> {
@@ -15,17 +16,26 @@ export async function fetchTransactions(): Promise<TransactionItem[]> {
 }
 
 export async function createTransaction(payload: Omit<TransactionItem, 'id' | 'created_at' | 'updated_at'>): Promise<TransactionItem> {
-  const { data, error } = await supabase
-    .from('transactions')
-    .insert(payload)
-    .select('*')
-    .single()
-
-  if (error || !data) {
-    throw error ?? new Error('Gagal membuat transaksi.')
+  const currentUserId = await getCurrentUserId()
+  if (!currentUserId) {
+    throw new Error('User belum dikenali. Silakan login ulang.')
   }
 
-  return data as TransactionItem
+  try {
+    const { data, error } = await supabase
+      .from('transactions')
+      .insert({ ...payload, user_id: currentUserId })
+      .select('*')
+      .single()
+
+    if (error || !data) {
+      throw error ?? new Error('Gagal membuat transaksi.')
+    }
+
+    return data as TransactionItem
+  } catch (err) {
+    throw err instanceof Error ? err : new Error('Gagal membuat transaksi.')
+  }
 }
 
 export async function updateTransaction(id: string, payload: Partial<Omit<TransactionItem, 'id' | 'created_at' | 'updated_at'>>): Promise<TransactionItem> {

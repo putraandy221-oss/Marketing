@@ -131,6 +131,42 @@ export async function replyFeedback(id: string, response: string): Promise<Feedb
   return data as FeedbackItem
 }
 
+export async function sendMessageToStaff(staffId: string, ownerId: string, message: string): Promise<FeedbackItem> {
+  const { data, error } = await supabase
+    .from('feedback')
+    .insert({
+      sender_id: staffId,
+      owner_id: ownerId,
+      message: '',
+      response: message,
+      status: 'responded',
+      is_read_by_staff: false,
+      is_read_by_owner: true,
+    })
+    .select('*')
+    .single()
+
+  if (error || !data) {
+    throw error ?? new Error('Gagal mengirim pesan ke staff.')
+  }
+
+  const truncatedMessage = message.length > 100 ? message.substring(0, 100) + '...' : message
+  try {
+    await createNotificationIfNotExists({
+      receiver_id: staffId,
+      sender_id: ownerId,
+      type: 'feedback_response',
+      reference_id: `feedback_${data.id}`,
+      title: 'Pemilik mengirim pesan baru',
+      message: truncatedMessage,
+    })
+  } catch (err) {
+    console.error('Failed to send owner message notification:', err)
+  }
+
+  return data as FeedbackItem
+}
+
 export async function markFeedbackAsRead(id: string): Promise<FeedbackItem> {
   const { data, error } = await supabase
     .from('feedback')

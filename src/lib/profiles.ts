@@ -41,6 +41,21 @@ export async function fetchAllProfiles(): Promise<UserProfile[]> {
   return data as UserProfile[]
 }
 
+export async function fetchProfilesByRole(role: 'owner' | 'manager' | 'staff'): Promise<UserProfile[]> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('role', role)
+    .eq('is_active', true)
+    .order('full_name', { ascending: true })
+
+  if (error || !data) {
+    throw error ?? new Error('Gagal memuat profil pengguna.')
+  }
+
+  return data as UserProfile[]
+}
+
 export async function findProfileByEmail(email: string): Promise<UserProfile | null> {
   const { data, error } = await supabase
     .from('profiles')

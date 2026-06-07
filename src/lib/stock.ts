@@ -116,23 +116,24 @@ export async function updateStockItem(
     .update(payload)
     .eq('id', id)
     .select('*')
-    .single()
 
-  if (error || !data) {
+  if (error || !data || (Array.isArray(data) && data.length === 0)) {
     throw error ?? new Error('Gagal memperbarui item stok.')
   }
+
+  const updatedStock = Array.isArray(data) ? data[0] : data
 
   // Check and notify if stock is low or expiring
   try {
     await Promise.all([
-      checkAndNotifyStockLow(data as StockItem),
-      checkAndNotifyStockExpiring(data as StockItem),
+      checkAndNotifyStockLow(updatedStock as StockItem),
+      checkAndNotifyStockExpiring(updatedStock as StockItem),
     ])
   } catch (err) {
     console.error('Failed to check stock notifications after update:', err)
   }
 
-  return data as StockItem
+  return updatedStock as StockItem
 }
 
 export async function deleteStockItem(id: string): Promise<void> {
