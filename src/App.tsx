@@ -8,6 +8,7 @@ import StaffDashboard from './pages/StaffDashboard'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import NotificationSettingsPage from './pages/NotificationSettingsPage'
 import RequireAuth from './pages/RequireAuth'
+import SidebarLayout from './components/SidebarLayout'
 import NotFoundPage from './pages/NotFoundPage'
 import type { UserRole } from './types/auth'
 
@@ -70,71 +71,87 @@ const App = () => {
 
   return (
     <div className="app-shell">
-      <main className="mx-auto max-w-6xl p-6">
-        <Routes>
-            <Route path="/login" element={role ? <Navigate to={`/dashboard/${role}`} replace /> : <LoginPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route
-              path="/notification-settings"
-              element={
-                <RequireAuth allowedRoles={['owner', 'manager', 'staff']} currentRole={role} loading={loading}>
+      <Routes>
+        <Route path="/login" element={role ? <Navigate to={`/dashboard/${role}`} replace /> : <LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route
+          path="/notification-settings"
+          element={
+            <RequireAuth allowedRoles={['owner', 'manager', 'staff']} currentRole={role} loading={loading}>
+              {role ? (
+                <SidebarLayout role={role} onLogout={handleLogout}>
                   <NotificationSettingsPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/dashboard/owner"
-              element={
-                <RequireAuth allowedRoles={['owner']} currentRole={role} loading={loading}>
-                  <OwnerDashboard onLogout={handleLogout} />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/dashboard/manager"
-              element={
-                <RequireAuth allowedRoles={['manager']} currentRole={role} loading={loading}>
-                  <ManagerDashboard onLogout={handleLogout} />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/dashboard/staff"
-              element={
-                <RequireAuth allowedRoles={['staff']} currentRole={role} loading={loading}>
-                  <StaffDashboard onLogout={handleLogout} />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/owner"
-              element={
-                <RequireAuth allowedRoles={['owner']} currentRole={role} loading={loading}>
-                  <OwnerDashboard onLogout={handleLogout} />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/manager"
-              element={
-                <RequireAuth allowedRoles={['manager']} currentRole={role} loading={loading}>
-                  <ManagerDashboard onLogout={handleLogout} />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/staff"
-              element={
-                <RequireAuth allowedRoles={['staff']} currentRole={role} loading={loading}>
-                  <StaffDashboard onLogout={handleLogout} />
-                </RequireAuth>
-              }
-            />
-            <Route path="/" element={role ? <Navigate to={`/dashboard/${role}`} replace /> : <Navigate to="/login" replace />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </main>
-      </div>
+                </SidebarLayout>
+              ) : (
+                <NotificationSettingsPage />
+              )}
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/dashboard/owner"
+          element={
+            <RequireAuth allowedRoles={['owner']} currentRole={role} loading={loading}>
+              <SidebarLayout role="owner" onLogout={handleLogout}>
+                <OwnerDashboard onLogout={handleLogout} />
+              </SidebarLayout>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/dashboard/manager"
+          element={
+            <RequireAuth allowedRoles={['manager']} currentRole={role} loading={loading}>
+              <SidebarLayout role="manager" onLogout={handleLogout}>
+                <ManagerDashboard onLogout={handleLogout} />
+              </SidebarLayout>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/dashboard/staff"
+          element={
+            <RequireAuth allowedRoles={['staff']} currentRole={role} loading={loading}>
+              <SidebarLayout role="staff" onLogout={handleLogout}>
+                <StaffDashboard onLogout={handleLogout} />
+              </SidebarLayout>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/owner"
+          element={
+            <RequireAuth allowedRoles={['owner']} currentRole={role} loading={loading}>
+              <SidebarLayout role="owner" onLogout={handleLogout}>
+                <OwnerDashboard onLogout={handleLogout} />
+              </SidebarLayout>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/manager"
+          element={
+            <RequireAuth allowedRoles={['manager']} currentRole={role} loading={loading}>
+              <SidebarLayout role="manager" onLogout={handleLogout}>
+                <ManagerDashboard onLogout={handleLogout} />
+              </SidebarLayout>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/staff"
+          element={
+            <RequireAuth allowedRoles={['staff']} currentRole={role} loading={loading}>
+              <SidebarLayout role="staff" onLogout={handleLogout}>
+                <StaffDashboard onLogout={handleLogout} />
+              </SidebarLayout>
+            </RequireAuth>
+          }
+        />
+        <Route path="/" element={role ? <Navigate to={`/dashboard/${role}`} replace /> : <Navigate to="/login" replace />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </div>
   )
 }
 
