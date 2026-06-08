@@ -13,6 +13,7 @@ const ownerNav: NavItem[] = [
   { label: 'Laporan', href: '#laporan', icon: '📊' },
   { label: 'Gaji & Pengeluaran', href: '#gaji', icon: '💵' },
   { label: 'Stok Ringkas', href: '#stok', icon: '📦' },
+  { label: 'Manajemen Menu', href: '#kelola-akun', icon: '🍴' },
   { label: 'Notifikasi', href: '/notification-settings', icon: '🔔' },
 ]
 
@@ -28,6 +29,7 @@ const managerNav: NavItem[] = [
 ]
 
 const staffNav: NavItem[] = [
+  { label: 'Dashboard', href: '/dashboard/staff', icon: '🏠' },
   { label: 'Input Pemasukan', href: '#transaksi', icon: '💰' },
   { label: 'Input Pengeluaran', href: '#transaksi', icon: '🧾' },
   { label: 'Update Stok', href: '#stok', icon: '📦' },
@@ -64,8 +66,17 @@ const Sidebar = ({ role, onLogout }: SidebarProps) => {
   const handleNav = (href: string) => {
     setMobileOpen(false)
     if (href.startsWith('#')) {
-      const el = document.querySelector(href)
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      const dashboardPath = `/dashboard/${role}`
+      if (location.pathname !== dashboardPath) {
+        navigate(dashboardPath)
+        setTimeout(() => {
+          const el = document.querySelector(href)
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }, 500)
+      } else {
+        const el = document.querySelector(href)
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
     } else {
       navigate(href)
     }
