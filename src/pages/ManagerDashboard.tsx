@@ -156,7 +156,7 @@ const ManagerDashboard = ({ onLogout }: ManagerDashboardProps) => {
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+        <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
           <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <p className="text-sm text-slate-500">Jumlah Item Stok</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{stockItems.length}</p>
@@ -172,6 +172,14 @@ const ManagerDashboard = ({ onLogout }: ManagerDashboardProps) => {
           <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <p className="text-sm text-slate-500">Transaksi Hari Ini</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{todayTransactions.length}</p>
+          </div>
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
+            <p className="text-sm text-slate-500">Jumlah Transaksi</p>
+            <p className="mt-4 text-3xl font-semibold text-slate-900">{todayTransactions.length}</p>
+          </div>
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
+            <p className="text-sm text-slate-500">Rata-rata Transaksi</p>
+            <p className="mt-4 text-3xl font-semibold text-slate-900">{formatCurrency(todayTransactions.length > 0 ? Math.round(totalIncomeToday / todayTransactions.length) : 0)}</p>
           </div>
         </div>
 
@@ -273,11 +281,13 @@ const ManagerDashboard = ({ onLogout }: ManagerDashboardProps) => {
                           <p className="text-sm text-slate-500">{item.quantity} {item.unit} • {item.category}</p>
                         </div>
                         <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                          state.variant === 'orange'
-                            ? 'bg-orange-100 text-orange-800'
-                            : state.variant === 'rose'
-                            ? 'bg-rose-100 text-rose-800'
-                            : 'bg-amber-100 text-amber-800'
+                          state.state === 'h-3'
+                            ? 'bg-red-100 text-red-800'
+                            : state.state === 'h-7'
+                            ? 'bg-amber-100 text-amber-800'
+                            : state.state === 'safe'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-slate-100 text-slate-700'
                         }`}>
                           {state.label}
                         </span>

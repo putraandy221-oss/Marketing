@@ -29,16 +29,16 @@ const statusOptions = [
 
 const badgeClasses = (variant: 'slate' | 'emerald' | 'amber' | 'orange' | 'rose') => {
   switch (variant) {
+    case 'rose':
+      return 'bg-red-100 text-red-800'
+    case 'orange':
+      return 'bg-amber-100 text-amber-800'
     case 'emerald':
       return 'bg-emerald-100 text-emerald-800'
     case 'amber':
       return 'bg-amber-100 text-amber-800'
-    case 'orange':
-      return 'bg-orange-100 text-orange-800'
-    case 'rose':
-      return 'bg-rose-100 text-rose-800'
     default:
-      return 'bg-slate-100 text-slate-700'
+      return 'bg-blue-100 text-blue-800'
   }
 }
 

@@ -143,6 +143,32 @@ const OwnerDashboard = ({ onLogout }: OwnerDashboardProps) => {
   const netProfitMonth = totalIncomeMonth - totalExpenseMonth -
     salaries.filter((item) => item.due_date >= monthStart && item.due_date <= monthEnd).reduce((sum, item) => sum + item.total_salary, 0)
 
+  const percentChange = useMemo(() => {
+    const yesterdayDate = new Date()
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1)
+    const yesterday = yesterdayDate.toISOString().slice(0, 10)
+
+    const totalIncomeYesterday = transactions
+      .filter((item) => item.date === yesterday)
+      .filter((item) => item.type === 'income' || item.type === 'sale')
+      .reduce((sum, item) => sum + item.amount, 0)
+
+    const totalExpenseYesterday = transactions
+      .filter((item) => item.date === yesterday)
+      .filter((item) => item.type === 'expense' || item.type === 'purchase')
+      .reduce((sum, item) => sum + item.amount, 0)
+
+    const calc = (today: number, yest: number) => {
+      if (!yest) return null
+      return Math.round(((today - yest) / yest) * 100)
+    }
+
+    return {
+      incomePercent: calc(totalIncomeToday, totalIncomeYesterday),
+      expensePercent: calc(totalExpenseToday, totalExpenseYesterday),
+    }
+  }, [transactions, totalIncomeToday, totalExpenseToday])
+
   const unpaidSalaries = salaries.filter((item) => item.payment_status === 'unpaid')
   const paidSalaries = salaries.filter((item) => item.payment_status === 'paid')
   const lowStockCount = stockItems.filter((item) => item.quantity <= item.minimum_stock).length
@@ -180,11 +206,25 @@ const OwnerDashboard = ({ onLogout }: OwnerDashboardProps) => {
           <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <p className="text-sm text-slate-500">Pemasukan Hari Ini</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{formatCurrency(totalIncomeToday)}</p>
+            {percentChange.incomePercent === null ? (
+              <span className="text-xs text-slate-400">-</span>
+            ) : percentChange.incomePercent > 0 ? (
+              <span className="text-xs font-medium text-emerald-600">↑ {Math.abs(percentChange.incomePercent)}%</span>
+            ) : (
+              <span className="text-xs font-medium text-red-500">↓ {Math.abs(percentChange.incomePercent)}%</span>
+            )}
             <p className="mt-2 text-sm text-slate-500">Berdasarkan transaksi hari ini.</p>
           </div>
           <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
             <p className="text-sm text-slate-500">Pengeluaran Hari Ini</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{formatCurrency(totalExpenseToday)}</p>
+            {percentChange.expensePercent === null ? (
+              <span className="text-xs text-slate-400">-</span>
+            ) : percentChange.expensePercent > 0 ? (
+              <span className="text-xs font-medium text-emerald-600">↑ {Math.abs(percentChange.expensePercent)}%</span>
+            ) : (
+              <span className="text-xs font-medium text-red-500">↓ {Math.abs(percentChange.expensePercent)}%</span>
+            )}
             <p className="mt-2 text-sm text-slate-500">Termasuk pembelian dan pengeluaran lain.</p>
           </div>
           <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
@@ -209,6 +249,30 @@ const OwnerDashboard = ({ onLogout }: OwnerDashboardProps) => {
             <p className="text-sm text-slate-500">Masukan Belum Dibalas</p>
             <p className="mt-4 text-3xl font-semibold text-slate-900">{pendingFeedbackCount}</p>
             <p className="mt-2 text-sm text-slate-500">Lihat dan balas masukan karyawan.</p>
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-3xl border border-emerald-200 bg-emerald-50 p-4 sm:p-6 dark:border-emerald-800 dark:bg-emerald-950">
+          <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">Ringkasan Gaji Bulan Ini</p>
+          <div className="mt-4 grid grid-cols-3 gap-4">
+            <div>
+              <p className="text-xs text-emerald-600">Total Gaji Pokok</p>
+              <p className="mt-1 text-lg font-bold text-emerald-900 dark:text-emerald-100">
+                {formatCurrency(salaries.reduce((sum, s) => sum + (s.base_salary ?? s.total_salary ?? 0), 0))}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-emerald-600">Total Tunjangan</p>
+              <p className="mt-1 text-lg font-bold text-emerald-900 dark:text-emerald-100">
+                {formatCurrency(salaries.reduce((sum, s) => sum + (s.allowance ?? 0), 0))}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-emerald-600">Sudah Dibayar</p>
+              <p className="mt-1 text-lg font-bold text-emerald-900 dark:text-emerald-100">
+                {formatCurrency(salaries.filter(s => s.payment_status === 'paid').reduce((sum, s) => sum + s.total_salary, 0))}
+              </p>
+            </div>
           </div>
         </div>
 
