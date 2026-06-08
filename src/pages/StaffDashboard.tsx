@@ -115,13 +115,21 @@ const StaffDashboard = ({ onLogout }: StaffDashboardProps) => {
       </section>
 
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-2">
-        <StaffTransactionInput />
-        <StaffStockReceiptForm />
+        <div id="transaksi">
+          <StaffTransactionInput />
+        </div>
+        <div id="stok">
+          <StaffStockReceiptForm />
+        </div>
       </div>
 
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
-        <StockViewer />
-        <FeedbackFormStaff />
+        <div id="lihat-stok">
+          <StockViewer />
+        </div>
+        <div id="masukan">
+          <FeedbackFormStaff />
+        </div>
       </div>
     </div>
   )

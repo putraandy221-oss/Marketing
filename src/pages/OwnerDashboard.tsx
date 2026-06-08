@@ -342,7 +342,9 @@ const OwnerDashboard = ({ onLogout }: OwnerDashboardProps) => {
       <div id="gaji">
         <OwnerSalaryManager />
       </div>
-      <StockManager />
+      <div id="stok">
+        <StockManager />
+      </div>
       <FeedbackManagerOwner />
     </div>
   )

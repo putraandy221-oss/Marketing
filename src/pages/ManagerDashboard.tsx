@@ -216,7 +216,7 @@ const ManagerDashboard = ({ onLogout }: ManagerDashboardProps) => {
         {error ? <p className="mt-4 text-sm text-rose-600">{error}</p> : null}
       </section>
 
-      <section className="rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
+      <section id="transaksi" className="rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Grafik Pemasukan & Pengeluaran</h2>
@@ -262,7 +262,7 @@ const ManagerDashboard = ({ onLogout }: ManagerDashboardProps) => {
         </div>
       </section>
 
-      <section className="rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
+      <section id="expired" className="rounded-3xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-slate-200">
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-2">
           <div>
             <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Stok Kritis</h2>
@@ -324,9 +324,15 @@ const ManagerDashboard = ({ onLogout }: ManagerDashboardProps) => {
         </div>
       </section>
 
-      <StockManager />
-      <ReportManager />
-      <ManagerSalaryOverview />
+      <div id="stok">
+        <StockManager />
+      </div>
+      <div id="laporan">
+        <ReportManager />
+      </div>
+      <div id="gaji">
+        <ManagerSalaryOverview />
+      </div>
     </div>
   )
 }
