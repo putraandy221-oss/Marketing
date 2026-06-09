@@ -33,7 +33,7 @@ const staffNav: NavItem[] = [
   { label: 'Input Pemasukan', href: '#transaksi', icon: '💰' },
   { label: 'Input Pengeluaran', href: '#transaksi', icon: '🧾' },
   { label: 'Update Stok', href: '#stok', icon: '📦' },
-  { label: 'Cek Expired', href: '#expired', icon: '⚠️' },
+  { label: 'Cek Expired', href: '#lihat-stok', icon: '⚠️' },
   { label: 'Masukan ke Pemilik', href: '#masukan', icon: '💬' },
   { label: 'Notifikasi', href: '/notification-settings', icon: '🔔' },
 ]
@@ -63,19 +63,36 @@ const Sidebar = ({ role, onLogout }: SidebarProps) => {
 
   const navItems = navByRole[role]
 
+  const scrollToHash = (hash: string) => {
+    const el = document.querySelector(hash)
+    if (!el) return false
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    return true
+  }
+
+  const scrollToHashAfterRender = (hash: string) => {
+    const start = performance.now()
+    const maxDuration = 1200
+
+    const tryScroll = () => {
+      if (scrollToHash(hash)) return
+      if (performance.now() - start < maxDuration) {
+        requestAnimationFrame(tryScroll)
+      }
+    }
+
+    requestAnimationFrame(tryScroll)
+  }
+
   const handleNav = (href: string) => {
     setMobileOpen(false)
     if (href.startsWith('#')) {
       const dashboardPath = `/dashboard/${role}`
       if (location.pathname !== dashboardPath) {
         navigate(dashboardPath)
-        setTimeout(() => {
-          const el = document.querySelector(href)
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        }, 500)
+        scrollToHashAfterRender(href)
       } else {
-        const el = document.querySelector(href)
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        scrollToHash(href)
       }
     } else {
       navigate(href)
